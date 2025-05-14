@@ -1,0 +1,28 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Dependency lock file (optional, see Step 2)
+# package-lock.json
+
+# Environment variables and sensitive files
+.env
+#db/config.js
+
+# Logs
+*.log
+logs/
+
+# Build outputs
+dist/
+build/
+
+# Editor and OS files
+.DS_Store
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
