@@ -4,18 +4,14 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  OneToMany,
 } from "typeorm";
 import { User } from "./User";
-import { Comment } from "./Comment";
+import { Post } from "./Post";
 
-@Entity("posts")
-export class Post {
+@Entity("comments")
+export class Comment {
   @PrimaryGeneratedColumn()
   id!: number;
-
-  @Column({ length: 200, nullable: false })
-  title!: string;
 
   @Column({ type: "text", nullable: false })
   content!: string;
@@ -23,13 +19,17 @@ export class Post {
   @Column({ name: "user_id", nullable: false })
   userId!: number;
 
+  @Column({ name: "post_id", nullable: false })
+  postId!: number;
+
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt!: Date;
 
-  @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.comments, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user!: User;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
-  comments!: Comment[];
+  @ManyToOne(() => Post, (post) => post.comments, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "post_id" })
+  post!: Post;
 }
