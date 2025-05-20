@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+const cors = require("cors");
 import { User } from "./entities/User";
 import { Post } from "./entities/Post";
 import { Comment } from "./entities/Comment";
@@ -8,6 +9,16 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
+
+// Enable CORS for localhost:4200
+// * => allow it from all domain
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:4200", // Allow only your Angular app
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
+  })
+);
 
 // Initialize TypeORM DataSource
 async function initializeDataSource() {
