@@ -7,7 +7,8 @@ const dataSource = new DataSource({
   port: 5432,
   username: "postgres",
   password: process.env.DB_PASSWORD || "your_password", // Fallback for testing
-  database: "myapp",
+  database: process.env.DATABASE_URL,
+  //ssl: { rejectUnauthorized: false },
   entities: ["src/entities/*.ts"],
   migrations: ["src/migrations/*.ts"],
   synchronize: false, // Set to false to use migrations

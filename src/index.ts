@@ -105,6 +105,85 @@ app.post("/posts", async (req: Request, res: any) => {
   }
 });
 
+// PUT /posts/:id
+app.put("/posts/:id", async (req: Request, res: any) => {
+  const { id } = req.params;
+  const { title, content } = req.body;
+  if (!title || !content) {
+    return res.status(400).json({ error: "Title and content are required" });
+  }
+  try {
+    const postRepo = dataSource.getRepository(Post);
+    const post = await postRepo.findOne({ where: { id: Number(id) } });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    post.title = title;
+    post.content = content;
+    const updatedPost = await postRepo.save(post);
+    res.json(updatedPost);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// DELETE /posts/:id
+app.delete("/posts/:id", async (req: Request, res: any) => {
+  const { id } = req.params;
+  try {
+    const postRepo = dataSource.getRepository(Post);
+    const post = await postRepo.findOne({ where: { id: Number(id) } });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+    await postRepo.remove(post);
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// PUT /comments/:id
+app.put("/comments/:id", async (req: Request, res: any) => {
+  const { id } = req.params;
+  const { content } = req.body;
+  if (!content) {
+    return res.status(400).json({ error: "Content is required" });
+  }
+  try {
+    const commentRepo = dataSource.getRepository(Comment);
+    const comment = await commentRepo.findOne({ where: { id: Number(id) } });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    comment.content = content;
+    const updatedComment = await commentRepo.save(comment);
+    res.json(updatedComment);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// DELETE /comments/:id
+app.delete("/comments/:id", async (req: Request, res: any) => {
+  const { id } = req.params;
+  try {
+    const commentRepo = dataSource.getRepository(Comment);
+    const comment = await commentRepo.findOne({ where: { id: Number(id) } });
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+    await commentRepo.remove(comment);
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 // GET /comments - Retrieve all comments
 app.get("/comments", async (req: Request, res: Response) => {
   try {
