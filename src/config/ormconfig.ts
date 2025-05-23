@@ -15,13 +15,15 @@ import "dotenv/config";
 //   logging: true,
 // });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 //connect to deployed postgree DB
 const dataSource = new DataSource({
   type: "postgres",
   url: process.env.DATABASE_URL, // Render provides this
   ssl: { rejectUnauthorized: false },
-  entities: ["src/entities/*.ts"],
-  migrations: ["src/migrations/*.ts"],
+  entities: [isProduction ? "dist/entities/*.js" : "src/entities/*.ts"],
+  migrations: [isProduction ? "dist/migrations/*.js" : "src/migrations/*.ts"],
   synchronize: false, // Set to false to use migrations
   logging: true,
 });
