@@ -19,11 +19,8 @@ import "dotenv/config";
 const dataSource = new DataSource({
   type: "postgres",
   url: process.env.DATABASE_URL, // Render provides this
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
-      : false,
-  entities: ["src/entities/*.ts"], // SSL for Render  entities: ["src/entities/*.ts"],
+  ssl: { rejectUnauthorized: false },
+  entities: ["src/entities/*.ts"],
   migrations: ["src/migrations/*.ts"],
   synchronize: false, // Set to false to use migrations
   logging: true,
