@@ -14,7 +14,8 @@ app.use(express.json());
 // * => allow it from all domain
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:4200", // Allow only your Angular app
+    //origin: process.env.FRONTEND_URL || "http://localhost:4200", // Allow only your Angular app
+    origin: "*", // Allow only your Angular app
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allow these headers
   })
