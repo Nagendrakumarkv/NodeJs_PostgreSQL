@@ -23,7 +23,7 @@ export class Comment {
   postId!: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt!: Date;
+  created_at!: Date;
 
   @ManyToOne(() => User, (user) => user.comments, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })

@@ -24,7 +24,7 @@ export class Post {
   userId!: number;
 
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt!: Date;
+  created_at!: Date;
 
   @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
