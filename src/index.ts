@@ -74,9 +74,14 @@ app.get("/posts", async (req: Request, res: Response) => {
     const postRepo = dataSource.getRepository(Post);
     const posts = await postRepo.find({ relations: ["user", "comments"] });
     res.json(posts);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error" });
+  } catch (err: any) {
+    console.error("getPosts error:", {
+      message: err.message,
+      stack: err.stack,
+      code: err.code,
+      detail: err.detail,
+    });
+    res.status(500).json({ error: "Database error", err });
   }
 });
 
