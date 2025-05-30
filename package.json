@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs --dataSource src/config/ormconfig.ts",
-    "migrate": "npm run build && npm run typeorm migration:run"
+    "migrate": "tsc && node dist/migrate.js"
   },
   "keywords": [],
   "author": "",
