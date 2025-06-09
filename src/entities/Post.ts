@@ -26,6 +26,9 @@ export class Post {
   @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   created_at!: Date;
 
+  @Column({ name: "updated_at", type: "timestamp", nullable: true })
+  updated_at?: Date;
+
   @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user!: User;
