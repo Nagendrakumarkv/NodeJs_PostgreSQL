@@ -1,0 +1,504 @@
+
+Fronend Repo URL: https://github.com/Nagendrakumarkv/PostgreSQL_NodeJs_Frontend
+Backend Repo URL: https://github.com/Nagendrakumarkv/NodeJs_PostgreSQL
+
+mkdir db -> create new folder
+
+Angular CLI commands
+---------------------
+ng generate @angular/core:control-flow -> automatic conversion from *ngFor and *ngIf to @for and @if
+
+
+NPM commands
+------------
+npm list typeorm -> to check typeorm is installed
+
+npm run typeorm migration:generate src/migrations/CreateBlogSchema -> run the migration to create a table or alter a table
+
+npm run typeorm migration:run -> run migration to execute the queries and changes will be reflected at pgAdmin
+
+
+Normalization
+-------------
+
+-> 1NF
+Both tables have atomic values (no arrays or repeating groups).
+Each row is unique (id as primary key).
+
+
+-> 2NF
+No composite keys, so no partial dependencies.
+All non-key columns (name, email, title, content, created_at) depend on the primary key (id).
+
+-> 3NF
+No transitive dependencies (e.g., email doesn’t depend on name).
+The schema is already in 3NF.
+
+
+SQL commands
+-------------
+
+-- CREATE
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL
+);
+
+-- INSERT
+INSERT INTO users (name, email) VALUES ('John Doe', 'john@example.com');
+INSERT INTO users (name, email) VALUES ('Jane Smith', 'jane@example.com');
+
+-- SELECT
+SELECT * FROM users;
+
+SELECT name, email FROM users WHERE name = 'John Doe';
+
+-- UPDATE
+UPDATE users SET email = 'john.doe@example.com' WHERE id = 1;
+
+-- DELETE
+DELETE FROM users WHERE id = 2;
+
+-- PRACTICE
+SELECT * FROM users WHERE email LIKE '%example.com';
+
+-- CREATE
+create table posts (
+id SERIAL PRIMARY KEY,
+title VARCHAR(200) NOT NULL,
+content TEXT NOT NULL,
+user_id INTEGER NOT NULL,
+created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (user_id) REFERENCES users(id)
+)
+
+-- INSERT
+insert into users (name,email) values
+('John Doe', 'john@example.com'),
+('Jane Smith', 'jane@example.com'),
+('Bob Johnson', 'bob@example.com')
+
+insert into posts (title, content, user_id) values
+('John''s First Post', 'Hello, world!', 1),
+('John''s Second Post', 'Learning SQL is fun!', 1),
+('Jane''s Post', 'My first blog post.', 2);
+
+INSERT INTO comments (content, user_id, post_id) VALUES 
+('Great post!', 2, 1),
+('Thanks for sharing!', 3, 1),
+('Nice blog!', 1, 2);
+
+--CREATE
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+);
+
+--INSERT
+INSERT INTO comments (content, user_id, post_id) VALUES 
+    ('Great post!', 2, 1),
+    ('Thanks for sharing!', 3, 1),
+    ('Nice blog!', 1, 2);
+
+-- SELECT 
+select * from users;
+
+select * from posts;
+
+select * from comments;
+
+-- JOINS
+select u.name, u.email, p.title, p.content
+from users u
+inner join posts p on u.id = p.user_id
+
+select u.name, u.email, p.title, p.content
+from users u
+left join posts p on u.id = p.user_id
+
+select u.name, u.email, p.title, p.content
+from users u
+right join posts p on u.id = p.user_id
+
+-- GROUP BY and HAVING
+select u.name, count(p.id) as post_count
+from users u 
+left join posts p on u.id = p.user_id
+group by u.name
+
+select u.name, count(p.id) as post_count
+from users u 
+left join posts p on u.id = p.user_id
+group by u.name 
+having count(p.id) > 0
+
+-- SUB QUERIES
+select name, email
+from users
+where id IN (select user_id from posts)
+
+-- INDEX
+create INDEX idx_posts_user_id ON posts (user_id)
+
+-- QUERY OPTIMIZATION
+EXPLAIN select * from posts where user_id = 5
+
+--PRACTICE
+select u.name, p.title 
+from users u 
+left join posts p on u.id = p.user_id
+where title LIKE '%First%'
+
+--DROP TABLE
+DROP TABLE users;
+DROP TABLE posts
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS users;
+
+--ALTER COLUMN NAME
+ALTER TABLE posts RENAME COLUMN "createdAt" TO "created_at";
+
+SQL Shell (psql) commands
+--------------------------
+\dt => list the tables
+
+
+Render PostGreSQL
+------------------
+Format                :"postgres://user:password@host:port/dbname"
+Internal Database URL : postgresql://myapp_h91q_user:0MXEYEBoCUqpVEy4V3OxzNQ700NTzIyu@dpg-d0n95tgdl3ps73a0e7ng-a/myapp_h91q
+External Database URL :psql postgresql://myapp_h91q_user:0MXEYEBoCUqpVEy4V3OxzNQ700NTzIyu@dpg-d0n95tgdl3ps73a0e7ng-a.oregon-postgres.render.com/myapp_h91q
+
+Hostname/address => dpg-d0n95tgdl3ps73a0e7ng-a.oregon-postgres.render.com
+Port =>             5432
+Database name =>    myapp_h91q
+Username =>         myapp_h91q_user
+Password =>         0MXEYEBoCUqpVEy4V3OxzNQ700NTzIyu
+
+Render Data for Blog App
+-----------------------
+
+Backend URL : https://nodejs-postgresql-backend.onrender.com
+Frontend URL : https://postgresql-nodejs-frontend.onrender.com
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------   
+
+AWS
+----
+
+IAM User
+--------
+
+User name: blog-app-user
+Password:  Naga@1818
+Console sign-in URL: https://575112518386.signin.aws.amazon.com/console
+
+
+RDS
+---
+
+DB instance identifier: myapp-db
+Master username: postgres
+Master password: Naga1818
+Security group: myapp-rds-sg (sg-0162def48cf1a8d08)
+RDS URL: myapp-db.cngy8s8akcfe.ap-south-1.rds.amazonaws.com
+
+psql shell > connection check
+-----------------------------
+Server [localhost]: myapp-db.cngy8s8akcfe.ap-south-1.rds.amazonaws.com
+Database [postgres]: myapp
+Port [5432]: 5432
+Username [postgres]: postgres
+Password for user postgres: Naga1818
+
+RDS Nodejs integration
+----------------------
+connectionString: "postgres://postgres:Naga1818@myapp-db.cngy8s8akcfe.ap-south-1.rds.amazonaws.com:5432/myapp",
+
+
+EC2
+---
+
+Name: myapp-api-server
+Key pair name: myapp-key
+myapp-key.pem > downloads
+security group name: myapp-ec2-sg
+
+
+S3
+---
+
+Fronted URL: http://myapp-nagendra-2025.s3-website.ap-south-1.amazonaws.com
+
+
+Lamda and API gateway
+---------------------
+
+Invoke URL: https://on1cxrd3qj.execute-api.ap-south-1.amazonaws.com/prod
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Pending
+
+-------
+1. AWS S3 for Static Hosting   => done
+2. AWS CloudFront and Route 53 => done
+3. AWS Lambda Basics
+
+
+
+SQL Advanced concepts
+---------------------
+-- Trigger
+
+ALTER TABLE posts ADD COLUMN updated_at TIMESTAMP;
+
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_posts_updated_at
+BEFORE UPDATE ON posts
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at();
+
+UPDATE posts SET title = 'Updated Title' WHERE id = 1;
+SELECT id, title, updated_at FROM posts WHERE id = 1;
+
+
+-- Stored procedure
+
+CREATE OR REPLACE PROCEDURE update_user_posts(user_id_param INTEGER, new_title VARCHAR)
+LANGUAGE plpgsql AS $$
+BEGIN
+  UPDATE posts
+  SET title = new_title,
+      updated_at = CURRENT_TIMESTAMP
+  WHERE user_id = user_id_param;
+  COMMIT;
+END;
+$$;
+
+CALL update_user_posts(1, 'New Title for User 1');
+SELECT id, title, user_id, updated_at FROM posts WHERE user_id = 1;
+
+
+-- View
+
+CREATE VIEW posts_with_users AS
+SELECT p.id, p.title, p.content, p.created_at, p.updated_at, u.name AS user_name
+FROM posts p
+JOIN users u ON p.user_id = u.id;
+
+SELECT * FROM posts_with_users LIMIT 5;
+
+
+-- EXPLAIN and Indexes
+
+SELECT * FROM posts WHERE user_id = 1 ORDER BY created_at DESC;
+
+EXPLAIN ANALYZE SELECT * FROM posts WHERE user_id = 1 ORDER BY created_at DESC;
+
+CREATE INDEX idx_posts_user_id_created_at ON posts (user_id, created_at DESC);
+
+SELECT * FROM posts WHERE user_id = 1 ORDER BY created_at DESC LIMIT 10;
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Plan
+----
+
+Day-by-Day Plan (30 Days)
+Week 1: PostgreSQL Fundamentals and Integration
+Goal: Learn PostgreSQL, relational database concepts, and integrate it with Node.js.
+
+Day 1: PostgreSQL Basics
+Learn relational database concepts (tables, schemas, keys).
+Install PostgreSQL and pgAdmin. Set up a local database.
+Practice basic SQL: CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
+Resource: PostgreSQL Tutorial (Section: Basic SQL).
+Task: Create a simple database with a users table (id, name, email).
+
+Day 2: Advanced SQL Queries
+Study JOIN (INNER, LEFT, RIGHT), GROUP BY, HAVING, and subqueries.
+Learn indexing and query optimization basics.
+Task: Create a posts table and write queries to join users and posts.
+Resource: FreeCodeCamp SQL tutorials.
+
+Day 3: PostgreSQL with Node.js
+Learn Node.js PostgreSQL libraries: pg (node-postgres) or typeorm.
+Set up a Node.js project with pg. Connect to your local PostgreSQL database.
+Task: Build a simple REST API (GET /users, POST /users) using Express and pg.
+Resource: Traversy Media’s Node.js + PostgreSQL tutorial.
+
+Day 4: TypeORM for ORM
+Study TypeORM basics (entities, repositories, migrations).
+Refactor your Day 3 API to use TypeORM instead of raw SQL.
+Task: Add a posts entity and create endpoints (GET /posts, POST /posts).
+Resource: TypeORM official docs.
+
+Day 5: Database Design and Migrations
+Learn database normalization (1NF, 2NF, 3NF) and schema design.
+Use TypeORM migrations to manage schema changes.
+Task: Design a schema for a blog app (users, posts, comments) and apply migrations.
+Resource: “Database Design for Mere Mortals” (concepts).
+
+Day 6: Angular + Node.js + PostgreSQL
+Build an Angular frontend to consume your blog API.
+Task: Create Angular components to display users and posts, and a form to add posts.
+Resource: Angular official docs, YouTube (e.g., DesignCourse).
+
+Day 7: Review and Mini-Project
+Review Week 1 concepts (SQL, TypeORM, Angular integration).
+Mini-Project: Build a CRUD app (e.g., Todo list or Blog) with Angular, Node.js, and PostgreSQL.
+Deploy to Render (use your existing knowledge).
+Task: Ensure all CRUD operations work and data persists in PostgreSQL.
+
+Week 2: AWS Fundamentals and Deployment
+Goal: Learn AWS services (EC2, RDS, S3, Elastic Beanstalk) and deploy your app.
+
+Day 8: AWS Introduction
+Sign up for AWS Free Tier. Explore the AWS Management Console.
+Learn core services: EC2, RDS, S3, IAM, VPC.
+Resource: AWS Training (Free courses: “AWS Cloud Practitioner Essentials”).
+Task: Set up an IAM user with limited permissions.
+
+Day 9: AWS RDS (PostgreSQL)
+Learn Amazon RDS and set up a PostgreSQL instance.
+Connect to RDS from your local Node.js app using pg.
+Task: Migrate your blog app’s database to RDS and test API endpoints.
+Resource: AWS RDS documentation.
+
+Day 10: AWS EC2 and Deployment
+Launch an EC2 instance (Ubuntu) and configure it (SSH, Node.js, Nginx).
+Deploy your Node.js API to EC2 manually.
+Task: Update your Angular app to point to the EC2-hosted API.
+Resource: Udemy (Stephane Maarek’s AWS Developer course).
+
+Day 11: AWS Elastic Beanstalk
+Learn Elastic Beanstalk for simplified Node.js deployment.
+Deploy your Node.js API to Elastic Beanstalk.
+Task: Test API endpoints and troubleshoot deployment issues.
+Resource: AWS Elastic Beanstalk docs.
+
+Day 12: AWS S3 for Static Hosting
+Learn S3 for hosting static files (e.g., Angular builds).
+Build your Angular app (ng build) and host it on S3.
+Task: Configure S3 bucket as a static website and access your app.
+Resource: AWS S3 documentation.
+
+Day 13: AWS CloudFront and Route 53
+Learn CloudFront for CDN and Route 53 for DNS.
+Set up CloudFront to serve your S3-hosted Angular app.
+Task: Optionally, configure a custom domain with Route 53 (if you have one).
+Resource: AWS Free Tier tutorials.
+
+Day 14: Review and Mini-Project
+Review AWS services (RDS, EC2, Elastic Beanstalk, S3, CloudFront).
+Mini-Project: Redeploy your Week 1 blog app to AWS (API on Elastic Beanstalk, frontend on S3, database on RDS).
+Task: Ensure the app is accessible and functional.
+
+Week 3: Advanced Integration and Security
+Goal: Deepen PostgreSQL and AWS skills, and secure your full-stack app.
+
+Day 15: Advanced PostgreSQL
+Learn triggers, stored procedures, and views.
+Optimize queries using EXPLAIN and indexes.
+Task: Add a trigger to your blog app (e.g., update updated_at on post edits).
+Resource: PostgreSQL official docs.
+
+Day 16: Authentication with Node.js
+Implement JWT-based authentication in your Node.js API.
+Secure endpoints (e.g., only authenticated users can create posts).
+Task: Add login/register endpoints and protect routes.
+Resource: Traversy Media’s JWT tutorial.
+
+Day 17: Angular Authentication
+Integrate Angular with your JWT-based API.
+Use Angular services and guards to manage auth state.
+Task: Add login/register forms and protect routes in Angular.
+Resource: Angular official docs (Auth section).
+
+Day 18: AWS Security (IAM, VPC)
+Learn IAM roles, policies, and VPC configurations.
+Secure your RDS instance with a private VPC.
+Task: Update your RDS and Elastic Beanstalk to use secure configurations.
+Resource: AWS Security Best Practices.
+
+Day 19: AWS Lambda Basics
+Learn AWS Lambda for serverless functions.
+Create a Lambda function to handle a simple API endpoint (e.g., GET /hello).
+Task: Integrate Lambda with API Gateway and test it.
+Resource: AWS Lambda docs.
+
+Day 20: Backup and Monitoring
+Set up RDS backups and snapshots.
+Learn CloudWatch for monitoring EC2/Elastic Beanstalk.
+Task: Configure CloudWatch alarms for your API’s CPU usage.
+Resource: AWS CloudWatch docs.
+
+Day 21: Review and Mini-Project
+Review authentication, AWS security, and serverless concepts.
+Mini-Project: Extend your blog app with user authentication (JWT) and a Lambda function (e.g., for sending emails or analytics).
+Task: Deploy the updated app to AWS and verify security.
+Week 4: Capstone Project and Optimization
+Goal: Build a production-ready full-stack app and prepare for real-world scenarios.
+
+Day 22: Project Planning
+Plan a capstone project: e.g., an e-commerce app, job board, or social media platform.
+Define features (e.g., user auth, CRUD, file uploads) and schema.
+Task: Create a project roadmap and database schema.
+
+
+Day 23-25: Build Backend
+Develop the Node.js API with TypeORM and PostgreSQL (on RDS).
+Implement auth, CRUD, and advanced features (e.g., file uploads to S3).
+Task: Deploy the API to Elastic Beanstalk and test endpoints.
+
+Day 26-28: Build Frontend
+Build the Angular frontend to consume the API.
+Implement responsive UI, auth, and dynamic features.
+Task: Deploy the frontend to S3 with CloudFront and test the full app.
+
+Day 29: Optimization and Testing
+Optimize database queries and API performance.
+Write unit tests for Node.js (using Jest) and Angular (using Jasmine/Karma).
+Task: Fix bugs and ensure the app is production-ready.
+
+Day 30: Documentation and Portfolio
+Document your project (README, API docs).
+Add the project to your GitHub portfolio.
+Task: Prepare a demo and practice explaining your tech stack for interviews.
+Tips for Success
+
+Daily Routine: Spend 1 hour on theory (videos/docs), 2 hours coding, and 30 minutes reviewing.
+Practice: Use Git for version control and commit daily.
+Community: Join X communities or Discord for Angular/AWS to ask questions.
+Troubleshooting: Use Stack Overflow, AWS forums, and PostgreSQL docs for errors.
+Portfolio: Showcase your projects on GitHub and LinkedIn to attract employers.
+Post-30 Days
+Deepen AWS: Study for AWS Certified Developer – Associate.
+Advanced Topics: Learn GraphQL, WebSocket, or CI/CD with AWS CodePipeline.
+Job Prep: Practice system design and coding interviews (LeetCode, HackerRank).
+By following this plan, you’ll gain proficiency in PostgreSQL and AWS, integrate them with your Angular/Node.js expertise, and build a production-ready full-stack app, positioning you as a competent full-stack developer. If you need specific resources or help with any topic, let me know!
+
+
+
+
+
+
