@@ -497,8 +497,11 @@ Advanced Topics: Learn GraphQL, WebSocket, or CI/CD with AWS CodePipeline.
 Job Prep: Practice system design and coding interviews (LeetCode, HackerRank).
 By following this plan, you’ll gain proficiency in PostgreSQL and AWS, integrate them with your Angular/Node.js expertise, and build a production-ready full-stack app, positioning you as a competent full-stack developer. If you need specific resources or help with any topic, let me know!
 
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Swagger UI 
 
-
-
-
+mkdir node-swagger-app
+cd node-swagger-app
+npm init -y
+npm install express swagger-ui-express @types/express @types/swagger-ui-express swagger-jsdoc @types/swagger-jsdoc typescript ts-node nodemon
