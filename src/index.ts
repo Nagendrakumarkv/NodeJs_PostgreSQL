@@ -4,6 +4,8 @@ import { User } from "./entities/User";
 import { Post } from "./entities/Post";
 import { Comment } from "./entities/Comment";
 import dataSource from "./config/ormconfig";
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./config/swagger";
 
 const app = express();
 const port = 3000;
@@ -33,6 +35,9 @@ async function initializeDataSource() {
 }
 
 initializeDataSource();
+
+// Swagger Docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // GET /users - Retrieve all users
 app.get("/users", async (req: Request, res: Response) => {
