@@ -511,6 +511,9 @@ npm install express swagger-ui-express @types/express @types/swagger-ui-express 
 
 GraphQL
 
+npm install graphql express-graphql
+npm install -D @types/express-graphql @types/graphql
+
 1. Query a single user by ID
 
 query {
