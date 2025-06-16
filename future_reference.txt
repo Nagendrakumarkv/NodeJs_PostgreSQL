@@ -505,3 +505,148 @@ mkdir node-swagger-app
 cd node-swagger-app
 npm init -y
 npm install express swagger-ui-express @types/express @types/swagger-ui-express swagger-jsdoc @types/swagger-jsdoc typescript ts-node nodemon
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+GraphQL
+
+1. Query a single user by ID
+
+query {
+  user(id: 1) {
+    id
+    name
+    email
+    posts {
+      id
+      title
+    }
+    comments {
+      id
+      content
+    }
+  }
+}
+
+2. Query all users
+
+query {
+  users {
+    id
+    name
+    email
+    posts {
+      id
+      title
+    }
+    comments {
+      id
+      content
+    }
+  }
+}
+
+
+3. Add a new user
+
+mutation {
+  addUser(name: "Nagendra", email: "nagendra@example.com") {
+    id
+    name
+    email
+  }
+}
+
+
+4. Add a new post
+
+mutation {
+  addPost(title: "My First Post", content: "Hello, this is a GraphQL post", userId: 1) {
+    id
+    title
+    content
+    user {
+      name
+    }
+  }
+}
+
+
+5. Add a new comment
+
+mutation {
+  addComment(content: "Nice post!", userId: 1, postId: 1) {
+    id
+    content
+    user {
+      name
+    }
+    post {
+      title
+    }
+  }
+}
+
+
+6. Update a post
+
+mutation {
+  updatePost(id: 1, title: "Updated Title", content: "Updated content goes here") {
+    id
+    title
+    content
+  }
+}
+
+
+7. Delete a post
+
+mutation {
+  deletePost(id: 1) {
+    id
+    title
+  }
+}
+
+8. Get all posts with user and comments
+
+query {
+  posts {
+    id
+    title
+    content
+    user {
+      id
+      name
+    }
+    comments {
+      id
+      content
+      user {
+        name
+      }
+    }
+  }
+}
+
+9. Get all comments
+
+query {
+  comments {
+    id
+    content
+    user {
+      name
+    }
+    post {
+      title
+    }
+  }
+}
+
+
+
+
+
+

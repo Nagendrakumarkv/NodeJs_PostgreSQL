@@ -6,6 +6,8 @@ import { Comment } from "./entities/Comment";
 import dataSource from "./config/ormconfig";
 import swaggerUi from "swagger-ui-express";
 import { swaggerDocument } from "./config/swagger";
+import { graphqlHTTP } from "express-graphql";
+import { schema } from "./graphql/schema";
 
 const app = express();
 const port = 3000;
@@ -38,6 +40,16 @@ initializeDataSource();
 
 // Swagger Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// GraphQL endpoint
+app.use(
+  "/graphql",
+  graphqlHTTP((req) => ({
+    schema: schema,
+    context: { dataSource },
+    graphiql: true, // Enable GraphiQL interface for testing
+  }))
+);
 
 // GET /users - Retrieve all users
 app.get("/users", async (req: Request, res: Response) => {
